@@ -241,7 +241,7 @@
         <div class="row-posters">
             <% if (typeof movies !== 'undefined' && movies.length > 0) { %>
                 <% movies.slice(0, 10).forEach(movie => { %>
-                    <div class="card-dummy" title="<%= movie.title %> (Cast: <%= movie.cast && movie.cast.length > 0 ? movie.cast[0].name : 'Unknown' %>)" style="background-image: url('<%= movie.poster %>'); background-size: cover; background-position: center; color: transparent;">
+                    <div class="card-dummy" title="<%= movie.title %> - ⭐ <%= movie.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= movie.poster_path %>'); background-size: cover; background-position: center; color: transparent;">
                         <%= movie.title %>
                     </div>
                 <% }) %>
@@ -256,7 +256,7 @@
         <div class="row-posters">
             <% if (typeof movies !== 'undefined' && movies.length > 10) { %>
                 <% movies.slice(10, 20).forEach(movie => { %>
-                    <div class="card-dummy" title="<%= movie.title %> (Cast: <%= movie.cast && movie.cast.length > 0 ? movie.cast[0].name : 'Unknown' %>)" style="background-image: url('<%= movie.poster %>'); background-size: cover; background-position: center; color: transparent;">
+                    <div class="card-dummy" title="<%= movie.title %> - ⭐ <%= movie.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= movie.poster_path %>'); background-size: cover; background-position: center; color: transparent;">
                         <%= movie.title %>
                     </div>
                 <% }) %>
