@@ -11,21 +11,20 @@ const route = require("./routes/route")
 
 
 app.use(express.json());
-app.use(express.urlencoded({extended:true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.set("view engine","ejs");
+app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 DBConnect();
 
-app.use('/',route);
+app.use('/', route);
 
 
 
-if (process.env.NODE_ENV !== "production") {
-  app.listen(PORT,()=>{
-    console.log(`Server is running at ${PORT}`);
-  })
-}
+app.listen(PORT, () => {
+  console.log(`Server is running at ${PORT}`);
+})
 
-module.exports = app;
+
+// module.exports = app;
