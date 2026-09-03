@@ -84,30 +84,12 @@ const userController = {
     try {
       const apiKey = process.env.TMDB_API_KEY || "15fdacbd9c0aba4635686a669c55b973";
 
-      // 1. Fetch trending movies
-      const trendingResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`);
-      const trendingData = await trendingResponse.json();
-      const trendingMovies = trendingData.results || [];
+      // Fetch trending movies (TMDB returns 20 movies max per request)
+      const response = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`);
+      const data = await response.json();
+      const allMovies = data.results || [];
 
-      // 2. Fetch popular movies
-      const popularResponse = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
-      const popularData = await popularResponse.json();
-      const popularMovies = popularData.results || [];
-
-      // 3. Fetch top rated movies
-      const topRatedResponse = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`);
-      const topRatedData = await topRatedResponse.json();
-      const topRatedMovies = topRatedData.results || [];
-
-      // 4. Fetch upcoming movies
-      const upcomingResponse = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}`);
-      const upcomingData = await upcomingResponse.json();
-      const upcomingMovies = upcomingData.results || [];
-
-      // 5. Combine all movies into a single array
-      const allMovies = trendingMovies.concat(popularMovies, topRatedMovies, upcomingMovies);
-
-      // Send the single movie array to the dashboard template
+      // Send the movies to the dashboard template
       res.render("dashboard", { 
         user: req.user, 
         movies: allMovies
