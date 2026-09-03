@@ -6,7 +6,7 @@ const auth = (req, res, next) => {
   if (!token) return res.redirect("/login");
 
   try {
-    req.user = jwt.verify(token, process.env.KEY); 
+    req.user = jwt.verify(token, process.env.KEY || "BhaveshPandey"); 
     next();
   } catch (error) {
     res.clearCookie("token");
