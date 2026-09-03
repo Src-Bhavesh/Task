@@ -71,7 +71,7 @@ const userController = {
       res.cookie("token", token, {
         httpOnly: true,
         maxAge: 30 * 24 * 60 * 60 * 1000
-        
+
       });
       return res.redirect("/dashboard");
     } catch (error) {
@@ -83,20 +83,22 @@ const userController = {
   dashboard: async (req, res) => {
     try {
       const apiKey = process.env.TMDB_API_KEY || "15fdacbd9c0aba4635686a669c55b973";
-      
-      // Fetch trending movies and popular movies from TMDB
-      const [trendingRes, popularRes] = await Promise.all([
-        fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`),
-        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`)
-      ]);
-      
-      const trendingData = await trendingRes.json();
-      const popularData = await popularRes.json();
-      
-      // Combine them or pass them as one array. Let's pass all as movies for simplicity
-      const movies = [...(trendingData.results || []), ...(popularData.results || [])];
-      
-      res.render("dashboard", { user: req.user, movies });
+
+      // 1. Fetch trending movies
+      const trendingResponse = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`);
+      const trendingData = await trendingResponse.json();
+      const trendingMovies = trendingData.results || [];
+
+      // 2. Fetch popular movies
+      const popularResponse = await fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`);
+      const popularData = await popularResponse.json();
+      const popularMovies = popularData.results || [];
+
+      // 3. Combine the two lists together
+      const allMovies = trendingMovies.concat(popularMovies);
+
+      // 4. Send the movies to the dashboard template
+      res.render("dashboard", { user: req.user, movies: allMovies });
     } catch (err) {
       console.error("TMDB Fetch error:", err);
       res.render("dashboard", { user: req.user, movies: [] });
