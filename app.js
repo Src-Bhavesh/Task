@@ -16,15 +16,21 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-DBConnect();
+app.use(async (req, res, next) => {
+  try {
+    await DBConnect();
+    next();
+  } catch (error) {
+    res.status(500).send("Database connection failed: " + error.message);
+  }
+});
 
 app.use('/', route);
 
+if (process.env.NODE_ENV !== "production") {
+  app.listen(PORT, () => {
+    console.log(`Server is running at ${PORT}`);
+  });
+}
 
-
-app.listen(PORT, () => {
-  console.log(`Server is running at ${PORT}`);
-})
-
-
-// module.exports = app;
+module.exports = app;
