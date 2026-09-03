@@ -208,10 +208,10 @@
         <div class="left-nav">
             <div class="logo">STREAMFLIX</div>
             <ul class="nav-links">
-                <li><a href="#" class="active">Home</a></li>
+                <li><a href="/dashboard" class="active">Home</a></li>
+                <li><a href="/profile">My List</a></li>
                 <li><a href="#">TV Shows</a></li>
                 <li><a href="#">Movies</a></li>
-                <li><a href="#">New & Popular</a></li>
             </ul>
         </div>
         <div class="right-nav">
@@ -231,7 +231,7 @@
         <p>Your subscription is active via encrypted JWT cookie. Session authorization verified for User ID: <strong><%= user && user.UserID ? user.UserID : "Authenticated" %></strong>.</p>
         <div class="btn-group">
             <a href="#" class="btn btn-white">▶ Play</a>
-            <a href="#" class="btn btn-gray">ⓘ More Info</a>
+            <a href="/profile" class="btn btn-gray">My List</a>
         </div>
     </header>
 
@@ -242,6 +242,7 @@
             <% if (typeof movies !== 'undefined' && movies.length > 0) { %>
                 <% movies.slice(0, 10).forEach(movie => { %>
                     <div class="card-dummy" title="<%= movie.title %> - ⭐ <%= movie.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= movie.poster_path %>'); background-size: cover; background-position: center; position: relative;">
+                        <button onclick="saveMovie('<%= movie.id %>', '<%= movie.title %>', '<%= movie.poster_path %>', <%= movie.vote_average %>)" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; z-index: 10;">+</button>
                         <span style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-align: left; max-width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                             <%= movie.title %>
                         </span>
@@ -259,6 +260,7 @@
             <% if (typeof movies !== 'undefined' && movies.length > 10) { %>
                 <% movies.slice(10, 20).forEach(movie => { %>
                     <div class="card-dummy" title="<%= movie.title %> - ⭐ <%= movie.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= movie.poster_path %>'); background-size: cover; background-position: center; position: relative;">
+                        <button onclick="saveMovie('<%= movie.id %>', '<%= movie.title %>', '<%= movie.poster_path %>', <%= movie.vote_average %>)" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; z-index: 10;">+</button>
                         <span style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-align: left; max-width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
                             <%= movie.title %>
                         </span>
@@ -269,6 +271,26 @@
             <% } %>
         </div>
     </section>
+
+    <script>
+    async function saveMovie(id, title, poster, vote) {
+        try {
+            const response = await fetch('/save-movie', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tmdbId: id, title: title, poster_path: poster, vote_average: vote })
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert(title + ' saved to your list!');
+            } else {
+                alert('Failed to save movie.');
+            }
+        } catch(err) {
+            alert('Error saving movie');
+        }
+    }
+    </script>
 
 </body>
 </html>

@@ -11,6 +11,8 @@ route.get('/login', isLoggedIn, userController.loginPage);
 route.post('/register',userController.register);
 route.post('/login',userController.login);
 route.get('/dashboard',auth,userController.dashboard);
+route.get('/profile', auth, userController.profile);
+route.post('/save-movie', auth, userController.saveMovie);
 route.get("/logout", userController.logout);
 
 

@@ -108,6 +108,37 @@ const userController = {
   logout: (req, res) => {
     res.clearCookie("token");
     return res.redirect("/login");
+  },
+
+  profile: async (req, res) => {
+    try {
+      const User = require("../models/userModel");
+      const userDoc = await User.findById(req.user.UserID);
+      res.render("profile", { user: req.user, savedMovies: userDoc.savedMovies });
+    } catch (err) {
+      console.error("Profile error:", err);
+      res.redirect("/dashboard");
+    }
+  },
+
+  saveMovie: async (req, res) => {
+    try {
+      const User = require("../models/userModel");
+      const { tmdbId, title, poster_path, vote_average } = req.body;
+      
+      const userDoc = await User.findById(req.user.UserID);
+      
+      // Check if movie already saved
+      if (!userDoc.savedMovies.some(m => m.tmdbId === tmdbId)) {
+        userDoc.savedMovies.push({ tmdbId, title, poster_path, vote_average });
+        await userDoc.save();
+      }
+      
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Save movie error:", err);
+      res.status(500).json({ success: false, error: err.message });
+    }
   }
 };
 

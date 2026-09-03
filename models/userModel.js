@@ -12,7 +12,13 @@ const userSchema = mongoose.Schema({
   password:{
     type: String,
     required: true
-  }
+  },
+  savedMovies: [{
+    tmdbId: String,
+    title: String,
+    poster_path: String,
+    vote_average: Number
+  }]
 })
 
 const user = mongoose.model("User",userSchema);
