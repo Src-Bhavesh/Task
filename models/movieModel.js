@@ -10,6 +10,10 @@ const movieSchema = mongoose.Schema({
     type: String,
     default: "Unknown Title"
   },
+  poster: {
+    type: String,
+    default: ""
+  },
   cast: [{
     name: String,
     character: String,
