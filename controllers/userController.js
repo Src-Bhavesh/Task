@@ -94,14 +94,30 @@ const userController = {
       const popularData = await popularResponse.json();
       const popularMovies = popularData.results || [];
 
-      // 3. Combine the two lists together
-      const allMovies = trendingMovies.concat(popularMovies);
+      // 3. Fetch top rated movies
+      const topRatedResponse = await fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`);
+      const topRatedData = await topRatedResponse.json();
+      const topRatedMovies = topRatedData.results || [];
 
-      // 4. Send the movies to the dashboard template
-      res.render("dashboard", { user: req.user, movies: allMovies });
+      // 4. Fetch upcoming movies
+      const upcomingResponse = await fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}`);
+      const upcomingData = await upcomingResponse.json();
+      const upcomingMovies = upcomingData.results || [];
+
+      // 5. Send all movie categories to the dashboard template
+      res.render("dashboard", { 
+        user: req.user, 
+        trendingMovies: trendingMovies,
+        popularMovies: popularMovies,
+        topRatedMovies: topRatedMovies,
+        upcomingMovies: upcomingMovies
+      });
     } catch (err) {
       console.error("TMDB Fetch error:", err);
-      res.render("dashboard", { user: req.user, movies: [] });
+      res.render("dashboard", { 
+        user: req.user, 
+        trendingMovies: [], popularMovies: [], topRatedMovies: [], upcomingMovies: [] 
+      });
     }
   },
 
