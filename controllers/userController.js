@@ -104,19 +104,19 @@ const userController = {
       const upcomingData = await upcomingResponse.json();
       const upcomingMovies = upcomingData.results || [];
 
-      // 5. Send all movie categories to the dashboard template
+      // 5. Combine all movies into a single array
+      const allMovies = trendingMovies.concat(popularMovies, topRatedMovies, upcomingMovies);
+
+      // Send the single movie array to the dashboard template
       res.render("dashboard", { 
         user: req.user, 
-        trendingMovies: trendingMovies,
-        popularMovies: popularMovies,
-        topRatedMovies: topRatedMovies,
-        upcomingMovies: upcomingMovies
+        movies: allMovies
       });
     } catch (err) {
       console.error("TMDB Fetch error:", err);
       res.render("dashboard", { 
         user: req.user, 
-        trendingMovies: [], popularMovies: [], topRatedMovies: [], upcomingMovies: [] 
+        movies: []
       });
     }
   },
