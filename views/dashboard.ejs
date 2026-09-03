@@ -237,23 +237,36 @@
     </header>
 
     <!-- CONTENT ROWS -->
-    <section class="row-section">
-        <h2>Streamflix Catalog</h2>
-        <div class="row-posters">
-            <% if (typeof movies !== 'undefined' && movies.length > 0) { %>
-                <% movies.forEach(movie => { %>
-                    <div class="card-dummy" title="<%= movie.title %> - ⭐ <%= movie.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= movie.poster_path %>'); background-size: cover; background-position: center;">
-                        <button onclick="saveMovie('<%= movie.id %>', '<%= movie.title %>', '<%= movie.poster_path %>', <%= movie.vote_average %>)" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; z-index: 10;">+</button>
-                        <span style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-align: left; max-width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                            <%= movie.title %>
-                        </span>
-                    </div>
-                <% }) %>
-            <% } else { %>
-                <div class="card-dummy">No Movies Found</div>
-            <% } %>
-        </div>
-    </section>
+    <% 
+      const sections = [
+        { title: "Trending Movies", data: typeof trendingMovies !== 'undefined' ? trendingMovies : [] },
+        { title: "Trending TV Shows", data: typeof trendingTv !== 'undefined' ? trendingTv : [] },
+        { title: "Popular on Streamflix", data: typeof popularMovies !== 'undefined' ? popularMovies : [] },
+        { title: "Top Rated", data: typeof topRated !== 'undefined' ? topRated : [] },
+        { title: "Upcoming Releases", data: typeof upcoming !== 'undefined' ? upcoming : [] }
+      ];
+    %>
+
+    <% sections.forEach(section => { %>
+        <section class="row-section">
+            <h2><%= section.title %></h2>
+            <div class="row-posters">
+                <% if (section.data.length > 0) { %>
+                    <% section.data.forEach(item => { %>
+                        <% const itemName = (item.title || item.name || '').replace(/'/g, "\\'"); %>
+                        <div class="card-dummy" title="<%= item.title || item.name %> - ⭐ <%= item.vote_average %>" style="background-image: url('https://image.tmdb.org/t/p/w500<%= item.poster_path %>'); background-size: cover; background-position: center;">
+                            <button onclick="saveMovie('<%= item.id %>', '<%= itemName %>', '<%= item.poster_path %>', <%= item.vote_average %>)" style="position: absolute; top: 5px; right: 5px; background: rgba(0,0,0,0.7); border: none; color: white; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; z-index: 10;">+</button>
+                            <span style="position: absolute; bottom: 5px; left: 5px; background: rgba(0,0,0,0.8); color: #fff; padding: 3px 6px; border-radius: 3px; font-size: 0.75rem; font-weight: bold; text-align: left; max-width: 90%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                <%= item.title || item.name %>
+                            </span>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <div class="card-dummy" style="padding: 1rem; text-align: center;">No Items Found</div>
+                <% } %>
+            </div>
+        </section>
+    <% }) %>
 
     <script>
     async function saveMovie(id, title, poster, vote) {

@@ -84,21 +84,31 @@ const userController = {
     try {
       const apiKey = process.env.TMDB_API_KEY || "15fdacbd9c0aba4635686a669c55b973";
 
-      // Fetch trending movies (TMDB returns 20 movies max per request)
-      const response = await fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`);
-      const data = await response.json();
-      const allMovies = data.results || [];
+      // Fetch 5 categories (20 items each = 100 total)
+      const endpoints = [
+        fetch(`https://api.themoviedb.org/3/trending/movie/day?api_key=${apiKey}`),
+        fetch(`https://api.themoviedb.org/3/trending/tv/day?api_key=${apiKey}`),
+        fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`),
+        fetch(`https://api.themoviedb.org/3/movie/top_rated?api_key=${apiKey}`),
+        fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}`)
+      ];
 
-      // Send the movies to the dashboard template
+      const responses = await Promise.all(endpoints);
+      const data = await Promise.all(responses.map(res => res.json()));
+
       res.render("dashboard", { 
         user: req.user, 
-        movies: allMovies
+        trendingMovies: data[0].results || [],
+        trendingTv: data[1].results || [],
+        popularMovies: data[2].results || [],
+        topRated: data[3].results || [],
+        upcoming: data[4].results || []
       });
     } catch (err) {
       console.error("TMDB Fetch error:", err);
       res.render("dashboard", { 
         user: req.user, 
-        movies: []
+        trendingMovies: [], trendingTv: [], popularMovies: [], topRated: [], upcoming: []
       });
     }
   },
