@@ -38,7 +38,7 @@ const userController = {
       return res.redirect("/login");
     } catch (error) {
       console.error(error);
-      return res.status(500).send("Registration error");
+      return res.status(500).send(`Registration error: ${error.message}`);
     }
   },
 
@@ -76,7 +76,7 @@ const userController = {
       return res.redirect("/dashboard");
     } catch (error) {
       console.error(error);
-      return res.status(500).send("Login error");
+      return res.status(500).send(`Login error: ${error.message}`);
     }
   },
 
