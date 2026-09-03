@@ -27,10 +27,10 @@ app.use(async (req, res, next) => {
 
 app.use('/', route);
 
-if (process.env.NODE_ENV !== "production") {
+
   app.listen(PORT, () => {
     console.log(`Server is running at ${PORT}`);
   });
-}
+
 
 module.exports = app;

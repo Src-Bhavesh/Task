@@ -237,24 +237,32 @@
 
     <!-- CONTENT ROWS -->
     <section class="row-section">
-        <h2>Trending Now</h2>
+        <h2>Trending Movies</h2>
         <div class="row-posters">
-            <div class="card-dummy">Stranger Features</div>
-            <div class="card-dummy">The Node Project</div>
-            <div class="card-dummy">Cyber Gateway</div>
-            <div class="card-dummy">Dark Express</div>
-            <div class="card-dummy">Mongo Mystery</div>
+            <% if (typeof movies !== 'undefined' && movies.length > 0) { %>
+                <% movies.slice(0, 10).forEach(movie => { %>
+                    <div class="card-dummy" title="Cast: <%= movie.cast && movie.cast.length > 0 ? movie.cast[0].name : 'Unknown' %>">
+                        <%= movie.title %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="card-dummy">No Movies Found</div>
+            <% } %>
         </div>
     </section>
 
     <section class="row-section">
         <h2>Recommended For You</h2>
         <div class="row-posters">
-            <div class="card-dummy">Auth Protocol</div>
-            <div class="card-dummy">Token Vault</div>
-            <div class="card-dummy">Full Stack Odyssey</div>
-            <div class="card-dummy">Hash & Salt</div>
-            <div class="card-dummy">API Chronicles</div>
+            <% if (typeof movies !== 'undefined' && movies.length > 10) { %>
+                <% movies.slice(10, 20).forEach(movie => { %>
+                    <div class="card-dummy" title="Cast: <%= movie.cast && movie.cast.length > 0 ? movie.cast[0].name : 'Unknown' %>">
+                        <%= movie.title %>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <div class="card-dummy">More Movies Coming Soon</div>
+            <% } %>
         </div>
     </section>
 

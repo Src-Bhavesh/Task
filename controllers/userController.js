@@ -80,8 +80,15 @@ const userController = {
     }
   },
 
-  dashboard: (req, res) => {
-    res.render("dashboard", { user: req.user });
+  dashboard: async (req, res) => {
+    try {
+      const Movie = require("../models/movieModel");
+      const movies = await Movie.find().limit(20);
+      res.render("dashboard", { user: req.user, movies });
+    } catch (err) {
+      console.error("Dashboard error:", err);
+      res.render("dashboard", { user: req.user, movies: [] });
+    }
   },
 
   logout: (req, res) => {
